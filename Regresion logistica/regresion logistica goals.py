@@ -9,7 +9,7 @@ from sklearn.linear_model import LogisticRegression  # Librería para el modelo 
 from sklearn.metrics import confusion_matrix, accuracy_score, classification_report  # Librería para métricas de evaluación#type: ignore
 
 # Carga del conjunto de datos
-data = pd.read_csv('/usr/local/lib/football_player_stats.csv')
+data = pd.read_csv('Regresion logistica/football_player_stats.csv')
 
 # Exploración inicial de datos
 print(data.head())  # Muestra las primeras filas del conjunto de datos
