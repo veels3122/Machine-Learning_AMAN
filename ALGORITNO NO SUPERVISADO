@@ -1,1 +1,60 @@
+# Importar las librerías necesarias
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
 
+# Cargar el conjunto de datos Iris
+iris = load_iris()
+data = iris.data  # Características
+feature_names = iris.feature_names
+target = iris.target  # Etiquetas verdaderas (no usadas en clustering)
+
+# Crear un DataFrame para facilitar el análisis
+df = pd.DataFrame(data, columns=feature_names)
+
+# Mostrar las primeras filas del conjunto de datos
+print("Primeras filas del conjunto de datos:")
+print(df.head())
+
+# Análisis exploratorio: estadísticas básicas
+print("\nEstadísticas descriptivas:")
+print(df.describe())
+
+# Escoger un subconjunto de datos (opcional, en caso de tener un dataset grande)
+# Para Iris no es necesario ya que es pequeño.
+
+# Visualización preliminar de los datos con PCA (opcional para datos altos en dimensiones)
+pca = PCA(n_components=2)  # Reducir a 2 dimensiones
+data_reduced = pca.fit_transform(data)
+
+plt.scatter(data_reduced[:, 0], data_reduced[:, 1], c='gray', alpha=0.5)
+plt.title("Visualización inicial de los datos (PCA)")
+plt.xlabel("PC1")
+plt.ylabel("PC2")
+plt.show()
+
+# Aplicar K-Means Clustering
+kmeans = KMeans(n_clusters=3, random_state=42)
+clusters = kmeans.fit_predict(data)
+
+# Agregar los clusters al DataFrame
+df['Cluster'] = clusters
+
+# Visualización de resultados: Gráfica con PCA
+plt.scatter(data_reduced[:, 0], data_reduced[:, 1], c=clusters, cmap='viridis', alpha=0.7)
+centroids = pca.transform(kmeans.cluster_centers_)  # Transformar centroides a PCA
+plt.scatter(centroids[:, 0], centroids[:, 1], c='red', marker='x', s=200, label='Centroides')
+plt.title("Resultados de K-Means Clustering")
+plt.xlabel("PC1")
+plt.ylabel("PC2")
+plt.legend()
+plt.show()
+
+# Interpretación de los clusters
+print("\nCluster Centers (en características originales):")
+print(pd.DataFrame(kmeans.cluster_centers_, columns=feature_names))
+print("\nDistribución de puntos por cluster:")
+print(df['Cluster'].value_counts())
